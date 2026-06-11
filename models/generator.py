@@ -86,3 +86,70 @@ class UpsampleBlock(nn.Module):
 
     def forward(self, x):
         return self.block(x)
+class OutputBlock(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+        self.block = nn.Sequential(
+            nn.Conv2d(
+                in_channels=64,
+                out_channels=3,
+                kernel_size=7,
+                stride=1,
+                padding=3
+            ),
+            nn.Tanh()
+        )
+
+    def forward(self, x):
+        return self.block(x)
+
+class Generator(nn.Module):
+    def __init__(self, num_residual_blocks=9):
+        super().__init__()
+
+        self.input_block = InputBlock()
+
+        self.down1 = DownsampleBlock(
+            in_channels=64,
+            out_channels=128
+        )
+
+        self.down2 = DownsampleBlock(
+            in_channels=128,
+            out_channels=256
+        )
+
+        self.residual_blocks = nn.Sequential(
+            *[
+                ResidualBlock(256)
+                for _ in range(num_residual_blocks)
+            ]
+        )
+
+        self.up1 = UpsampleBlock(
+            in_channels=256,
+            out_channels=128
+        )
+
+        self.up2 = UpsampleBlock(
+            in_channels=128,
+            out_channels=64
+        )
+
+        self.output_block = OutputBlock()
+
+    def forward(self, x):
+        x = self.input_block(x)
+
+        x = self.down1(x)
+        x = self.down2(x)
+
+        x = self.residual_blocks(x)
+
+        x = self.up1(x)
+        x = self.up2(x)
+
+        x = self.output_block(x)
+
+        return x
