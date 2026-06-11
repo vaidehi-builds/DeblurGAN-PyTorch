@@ -2,14 +2,11 @@ from datasets.gopro_dataset import GoProDataset
 
 dataset = GoProDataset(
     root_dir=r"D:\Datasets\GOPRO",
-    split="train"
+    split="train",
+    patch_size=256
 )
 
-for idx in [0, 100, 500, 1000, 2000]:
-    blur, sharp = dataset[idx]
+blur, sharp = dataset[0]
 
-    print(f"Pair {idx}")
-    blur.show()
-    sharp.show()
-
-    input("Press Enter...")
+print("Blur shape:", blur.shape)
+print("Sharp shape:", sharp.shape)
