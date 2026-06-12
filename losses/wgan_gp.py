@@ -48,7 +48,7 @@ def gradient_penalty(
     gp = (
         (gradient_norm - 1) ** 2
     ).mean()
-
+    
     return gp
 def critic_loss(
     critic,

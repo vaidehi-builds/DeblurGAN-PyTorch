@@ -13,7 +13,11 @@ class GoProDataset(Dataset):
         self.split = split
         self.patch_size = patch_size
 
-        self.to_tensor = transforms.ToTensor()
+        self.transform = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize(
+                mean=[0.5, 0.5, 0.5],
+                std=[0.5, 0.5, 0.5])])
 
         self.pairs = []
 
@@ -50,7 +54,7 @@ class GoProDataset(Dataset):
             blur = TF.crop(blur, i, j, h, w)
             sharp = TF.crop(sharp, i, j, h, w)
 
-        blur = self.to_tensor(blur)
-        sharp = self.to_tensor(sharp)
+        blur = self.transform(blur)
+        sharp = self.transform(sharp)
 
         return blur, sharp

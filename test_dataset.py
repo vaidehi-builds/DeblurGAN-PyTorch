@@ -8,5 +8,8 @@ dataset = GoProDataset(
 
 blur, sharp = dataset[0]
 
-print("Blur shape:", blur.shape)
-print("Sharp shape:", sharp.shape)
+print("Blur min :", blur.min().item())
+print("Blur max :", blur.max().item())
+
+print("Sharp min:", sharp.min().item())
+print("Sharp max:", sharp.max().item())
