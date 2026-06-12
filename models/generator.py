@@ -140,6 +140,9 @@ class Generator(nn.Module):
         self.output_block = OutputBlock()
 
     def forward(self, x):
+
+        input_image = x
+
         x = self.input_block(x)
 
         x = self.down1(x)
@@ -150,6 +153,8 @@ class Generator(nn.Module):
         x = self.up1(x)
         x = self.up2(x)
 
-        x = self.output_block(x)
+        residual = self.output_block(x)
 
-        return x
+        output = input_image + residual
+
+        return output
